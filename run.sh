@@ -15,42 +15,10 @@ if [ "${INPUT}" == "No" ] || [ "${INPUT}" == "no" ] ; then
    exit 0 
 elif [ "${INPUT}" == "Yes" ]||[ "${INPUT}" == "yes" ] ; then   
 read -p "Please enter the Organisation id: " org_id
-read -p "Please enter the service account email: " svcacc
-echo "Assign predefined role?"
-echo "- roles/editor"
-echo "- roles/pubsub.admin"
-echo "- roles/securitycenter.adminEditor"
-echo "- roles/monitoring.editor"
-echo "- roles/logging.configWriter"
-echo "- roles/compute.admin"
-read -p "Please specify yes or no: " role
-  if [ "${role}" == "No" ] || [ "${role}" == "no" ] ; then
-  read -p "Do you need to retrive vunrelabilities and threat from GCP console? specify yes or no:" secops
-  read -p "Creating custom role, provide the name: " roleid
-  if [ "${secops}" == "No" ] || [ "${secops}" == "no" ] ; then
-  cat <<EOF > ./vars.tfvars
+cat <<EOF > ./vars.tfvars
 org_id = "$org_id"
-service_account_email = "$svcacc"
-role_id = "$roleid"
 api = ["cloudresourcemanager.googleapis.com" ,"compute.googleapis.com","recommender.googleapis.com", "securitycenter.googleapis.com", "orgpolicy.googleapis.com", "sqladmin.googleapis.com", "monitoring.googleapis.com", "pubsub.googleapis.com"]
 EOF
-  elif [ "${secops}" == "yes" ] || [ "${secops}" == "Yes" ]; then
- cat <<EOF > ./vars.tfvars
-org_id = "$org_id"
-service_account_email = "$svcacc"
-role_id = "$roleid"
-permissionsec = "yes"
-api = ["cloudresourcemanager.googleapis.com" ,"compute.googleapis.com","recommender.googleapis.com", "securitycenter.googleapis.com", "orgpolicy.googleapis.com", "sqladmin.googleapis.com", "monitoring.googleapis.com", "pubsub.googleapis.com"]
-EOF
-fi
-  elif [ "${role}" == "Yes" ]||[ "${role}" == "yes" ] ; then
-  echo "granting predefined roles:"
-  cat <<EOF > ./vars.tfvars
-org_id = "$org_id"
-service_account_email = "$svcacc"
-api = ["cloudresourcemanager.googleapis.com" ,"compute.googleapis.com","recommender.googleapis.com", "securitycenter.googleapis.com", "orgpolicy.googleapis.com", "sqladmin.googleapis.com", "monitoring.googleapis.com", "pubsub.googleapis.com"]
-EOF
-fi
 terraform init
 terraform apply -var-file="vars.tfvars" -auto-approve
 echo "Approved"
