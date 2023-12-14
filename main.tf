@@ -22,7 +22,7 @@ data "google_projects" "my-org-projects" {
 # Resource to execute the python script that will enable the apis. 
 resource "null_resource" "Project_script" {
  provisioner "local-exec" {  
-    command = "/bin/python3 extractor.py"
+    command = "/usr/bin/python3 extractor.py"
   }
 }
 
