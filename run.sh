@@ -1,4 +1,4 @@
-#!/bin/bash 
+!/bin/bash 
 read -p "Please enter the Organisation id: " org_id
 cat <<EOF > ./vars.tfvars
 org_id = "$org_id"
